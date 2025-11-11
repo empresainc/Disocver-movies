@@ -1,47 +1,282 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Discover Movies</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>D MODS — Lançamento • WeChat disponível</title>
+  <meta name="description" content="D MODS — Lançamento oficial. WeChat MOD sem QR disponível para download. Spotify/YouTube/Netflix: em breve." />
+  <style>
+    :root{
+      --bg:#06070d; --surface:#0b0f1a; --surface-2:#0e1426; --text:#eef2ff; --muted:#9fb0c5;
+      --cyan:#22d3ee; --mag:#e879f9; --lime:#84cc16; --border:rgba(160,174,192,.22);
+      --glass:rgba(255,255,255,.04); --r:16px; --r-xl:22px; --pill:999px;
+      --shadow:0 28px 80px rgba(2,6,23,.7);
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+
+    /* ===== Fundo sem "buraco" branco no final ===== */
+    html{background-color:var(--bg)}
+    body{font:15px/1.65 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; 
+      color:var(--text);
+      min-height:100svh;
+      background:
+        radial-gradient(1200px 600px at -10% -10%, rgba(34,211,238,.16), transparent 60%),
+        radial-gradient(900px 520px at 110% -10%, rgba(232,121,249,.16), transparent 60%),
+        radial-gradient(900px 520px at 50% 120%, rgba(34,211,238,.14), transparent 60%),
+        var(--bg);
+      background-repeat:no-repeat; background-attachment:fixed;
+      -webkit-font-smoothing:antialiased;
+    }
+    /* camada extra que colore o rodapé e evita "branco" em browsers antigos */
+    body::after{content:""; position:fixed; inset:auto 0 0 0; height:24vh; pointer-events:none;
+      background:radial-gradient(80vw 40vh at 50% 120%, rgba(232,121,249,.18), transparent 70%)}
+
+    .container{width:100%;max-width:1040px;margin:0 auto;padding:22px;display:grid;gap:18px}
+
+    /* Splash */
+    #splash{position:fixed; inset:0; display:grid; place-items:center; 
+      background:
+        radial-gradient(1200px 700px at 50% -10%, rgba(34,211,238,.24), transparent 60%),
+        radial-gradient(1400px 800px at 50% 110%, rgba(232,121,249,.18), transparent 70%),
+        var(--bg); 
+      z-index:50; transition:opacity .6s ease}
+    #splash.hidden{opacity:0; pointer-events:none}
+    .splash-card{display:grid; place-items:center; gap:12px; text-align:center}
+    .splash-logo{width:120px; height:120px; border-radius:28px; display:grid; place-items:center; background:conic-gradient(from 180deg, rgba(34,211,238,.8), rgba(232,121,249,.8), rgba(34,211,238,.8)); box-shadow:inset 0 0 0 3px rgba(255,255,255,.08), 0 24px 60px rgba(34,211,238,.28)}
+    .splash-logo span{font-weight:900; font-size:3rem; letter-spacing:.02em; text-shadow:0 8px 18px rgba(0,0,0,.45)}
+    .splash-title{font-weight:800; font-size:1.1rem}
+    .splash-sub{color:#cdd7ea}
+    .skip{margin-top:6px; display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:var(--pill); background:var(--glass); border:1px solid var(--border); color:#d9e7ff; cursor:pointer}
+    @keyframes pop{0%{transform:scale(.8);opacity:0}60%{transform:scale(1.04);opacity:1}100%{transform:scale(1)}}
+    .splash-logo,.splash-title,.splash-sub,.skip{animation:pop .8s ease forwards}
+
+    /* Header */
+    header{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.01)) var(--surface);backdrop-filter:blur(10px)}
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:radial-gradient(120% 120% at 30% 0%, rgba(34,211,238,.8), rgba(232,121,249,.55) 50%, transparent 85%), #131624; box-shadow: inset 0 0 0 2px rgba(255,255,255,.06)}
+    .logo svg{width:26px;height:26px}
+    .title{display:flex;flex-direction:column;line-height:1.05}
+    .title b{font-size:1.06rem;letter-spacing:.02em}
+    .title small{color:var(--muted)}
+
+    .flag{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:var(--pill);border:1px solid var(--border);background:var(--glass);color:#cfe3ff;font-weight:700;font-size:.82rem}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--lime)}
+
+    /* Hero */
+    .hero{padding:22px;border-radius:var(--r-xl);border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.02)) var(--surface-2);box-shadow:var(--shadow);display:grid;gap:14px}
+    .hero h1{font-size:1.9rem;line-height:1.2}
+    .hero h1 span{background:linear-gradient(90deg,var(--cyan),var(--mag));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{color:var(--muted)}
+
+    /* Download card único (WeChat) */
+    .dl{display:grid; gap:12px; padding:18px; border-radius:18px; border:1px solid var(--border); background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02)) var(--surface); box-shadow:0 14px 40px rgba(34,211,238,.08)}
+    .dl h2{font-size:1.18rem}
+    .meta{display:inline-flex; align-items:center; gap:8px; font-size:.86rem; color:var(--muted)}
+    .pill{border:1px solid var(--border); padding:6px 10px; border-radius:var(--pill); background:var(--glass)}
+    .list{display:grid; gap:6px; color:var(--muted); font-size:.98rem}
+    .btn{display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 16px; border-radius:var(--pill); text-decoration:none; font-weight:900; border:0}
+    .btn-primary{background:linear-gradient(90deg,var(--cyan),var(--mag)); color:#0b0b11; box-shadow:0 18px 45px rgba(34,211,238,.25)}
+
+    /* Em breve */
+    .soon{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px}
+    @media(max-width:980px){.soon{grid-template-columns:1fr}}
+    .soon .dl{opacity:.85; background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,.015)) var(--surface)}
+
+    /* CTA fixa (mobile-friendly) */
+    .cta-fixed{position:fixed; left:0; right:0; bottom:12px; display:flex; justify-content:center; z-index:40}
+    .cta-fixed a{display:inline-flex; align-items:center; gap:10px; padding:12px 16px; border-radius:var(--pill); background:linear-gradient(90deg,var(--cyan),var(--mag)); color:#0b0b11; font-weight:900; box-shadow:0 18px 45px rgba(232,121,249,.25)}
+
+    footer{margin-top:8px;padding:12px;border-radius:14px;border:1px solid var(--border);background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.01)) var(--surface);color:#9fb0c5;font-size:.82rem;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between}
+    /* ===== Pessoas Autorizadas (botão + modal) ===== */
+    .team-cta-wrap{display:flex;justify-content:center;margin-top:4px}
+    .team-btn{padding:12px 18px;border-radius:var(--pill);background:linear-gradient(90deg,var(--cyan),var(--mag));border:none;color:#0b0b11;font-weight:900;font-size:.9rem;cursor:pointer;box-shadow:0 12px 32px rgba(232,121,249,.25)}
+    .team-btn:hover{filter:brightness(1.1);transform:translateY(-1px);transition:.2s}
+
+    .modal{position:fixed; inset:0; display:none; place-items:center; z-index:60}
+    .modal[aria-hidden="false"]{display:grid}
+    .modal .backdrop{position:absolute; inset:0; background:rgba(2,6,23,.6); backdrop-filter:blur(6px)}
+    .modal .panel{position:relative; width:min(920px, 92vw); max-height:82vh; overflow:auto; border-radius:18px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)) var(--surface-2); box-shadow:var(--shadow); padding:18px}
+
+    .panel header{display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0; background:transparent; border:none}
+    .panel h3{font-size:1.14rem}
+    .close{padding:8px 12px; border-radius:var(--pill); border:1px solid var(--border); background:var(--glass); color:#d9e7ff; font-weight:800; cursor:pointer}
+
+    .team-grid{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin-top:12px}
+    @media(max-width:900px){.team-grid{grid-template-columns:1fr}}
+    .member{display:grid; gap:10px; padding:14px; border-radius:16px; border:1px solid var(--border); background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02)) var(--surface)}
+    .member .top{display:flex; align-items:center; gap:12px}
+    .avatar{width:44px; height:44px; border-radius:12px; display:grid; place-items:center; background:radial-gradient(120% 120% at 30% 0%, rgba(34,211,238,.8), rgba(232,121,249,.55) 50%, transparent 85%), #131624}
+    .name{font-weight:800}
+    .role{font-size:.86rem; color:var(--muted)}
+    .tags{display:flex; flex-wrap:wrap; gap:8px}
+    .tag{border:1px solid var(--border); background:var(--glass); padding:6px 10px; border-radius:var(--pill); font-size:.78rem; color:#cfe3ff}
+
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Discover Movies</h1>
-    <nav>
-      <ul>
-        <li><a href="#inicio">Início</a></li>
-        <li><a href="#novidades">Próximos Lançamentos</a></li>
-        <li><a href="#musicas">Novas Músicas</a></li>
-        <li><a href="#sobre">Sobre Nós</a></li>
-        <li><a href="#contato">Contato</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <section id="novidades">
-    <h2>Próximos Lançamentos</h2>
-    <div class="platforms">
-      <button onclick="getUpcomingMovies('netflix')">Netflix</button>
-      <button onclick="getUpcomingMovies('hbo')">HBO</button>
-      <button onclick="getUpcomingMovies('amazon')">Amazon Prime</button>
-      <button onclick="getUpcomingMovies('disney')">Disney+</button>
-      <button onclick="getJustWatchUpcoming()">JustWatch</button>
+  <!-- Splash de entrada -->
+  <div id="splash" role="dialog" aria-labelledby="splash-title" aria-describedby="splash-sub">
+    <div class="splash-card">
+      <div class="splash-logo" aria-hidden="true"><span>D</span></div>
+      <div class="splash-title" id="splash-title">D‑mods • 1.000 registros</div>
+      <div class="splash-sub" id="splash-sub">A entrar…</div>
+      <button class="skip" id="skip">Entrar agora</button>
     </div>
-    <div id="movies"></div>
-  </section>
+  </div>
 
-  <section id="musicas">
-    <h2>Novas Músicas do Spotify</h2>
-    <button onclick="getNewReleases()">Buscar Novas Músicas</button>
-    <div id="music-container"></div>
-  </section>
+  <div class="container" aria-hidden="true" id="app-root">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="D MODS">
+            <path d="M12 14a6 6 0 0 1 6-6h8c16 0 26 10 26 24S42 56 26 56h-8a6 6 0 0 1-6-6V14Z" fill="#0b0f1a" stroke="#e6e2ff" stroke-width="3" />
+            <path d="M22 20v24h6c10 0 16-5 16-12S38 20 28 20h-6Z" fill="#e6e2ff" />
+          </svg>
+        </div>
+        <div class="title">
+          <b>D MODS</b>
+          <small>Lançamento oficial</small>
+        </div>
+      </div>
+      <span class="flag"><span class="dot"></span> WeChat disponível</span>
+    </header>
 
-  <footer>
-    <p>&copy; 2024 Discover Movies - Todos os direitos reservados.</p>
-  </footer>
+    <!-- Ação: Pessoas autorizadas -->
+    <div class="team-cta-wrap">
+      <button class="team-btn" id="open-team">👤 Pessoas autorizadas a ajudar</button>
+    </div>
 
-  <script src="script.js"></script>
+    <section class="hero" aria-label="Apresentação">
+      <h1>Bem‑vindo ao <span>D MODS</span> — hub de MODs com visual profissional.</h1>
+      <p>WeChat MOD (sem QR) já liberado para download seguro. Os demais (YouTube, Spotify, Netflix) ficam <b>em breve</b>.</p>
+    </section>
+
+    <!-- Download principal visível e bonito -->
+    <section class="dl" id="download">
+      <div class="meta"><span class="pill" style="border-color:rgba(132,204,22,.45)">Status: disponível</span><span class="pill">Android</span><span class="pill">Assinatura: oficial</span></div>
+      <h2>WeChat MOD — sem QR</h2>
+      <div class="list">
+        <div>• Criação de conta <b>sem QR</b></div>
+        <div>• Otimizações de performance e temas</div>
+        <div>• Link direto e verificado</div>
+      </div>
+      <a class="btn btn-primary" target="_blank" rel="noopener" href="https://www.mediafire.com/file/ckw8z5fax0b3frb/wechatdiscover.apk/file">⬇️ Baixar WeChat MOD (MediaFire)</a>
+    </section>
+
+    <!-- Em breve, cartões simples e elegantes -->
+    <section class="soon" aria-label="Em breve">
+      <article class="dl">
+        <div class="meta"><span class="pill">Status: em breve</span><span class="pill">Android</span></div>
+        <h2>YouTube MOD</h2>
+        <div class="list"><div>• Sem anúncios</div><div>• Background</div><div>• Controles avançados</div></div>
+        <a class="btn" aria-disabled="true">🔔 Avisar quando lançar</a>
+      </article>
+      <article class="dl">
+        <div class="meta"><span class="pill">Status: em breve</span><span class="pill">Android</span></div>
+        <h2>Spotify MOD</h2>
+        <div class="list"><div>• Sem anúncios</div><div>• Skips ilimitados</div><div>• Alta qualidade</div></div>
+        <a class="btn" aria-disabled="true">🔔 Avisar quando lançar</a>
+      </article>
+      <article class="dl">
+        <div class="meta"><span class="pill">Status: em breve</span><span class="pill">Android TV</span></div>
+        <h2>Netflix MOD</h2>
+        <div class="list"><div>• Perfis extras</div><div>• Compatível com Android TV</div><div>• Downloads*</div></div>
+        <a class="btn" aria-disabled="true">🔔 Avisar quando lançar</a>
+      </article>
+    </section>
+
+    <footer>
+      <div>© 2025 D MODS — Plataforma independente. Não afiliado a WeChat, YouTube, Spotify ou Netflix.</div>
+      <div><a href="#">Termos</a> • <a href="#">Privacidade</a></div>
+    </footer>
+
+    <!-- Modal Pessoas Autorizadas -->
+    <div class="modal" id="team" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="team-title">
+      <div class="backdrop" id="close-team" aria-hidden="true"></div>
+      <div class="panel">
+        <header>
+          <h3 id="team-title">Pessoas autorizadas a ajudar com o app</h3>
+          <button class="close" id="x-team">Fechar ✕</button>
+        </header>
+        <div class="team-grid">
+          <div class="member">
+            <div class="top">
+              <div class="avatar">D</div>
+              <div>
+                <div class="name">catyrm‑D</div>
+                <div class="role">CEO & Fundador</div>
+              </div>
+            </div>
+            <div class="tags">
+              <span class="tag">Direção</span>
+              <span class="tag">Produto</span>
+              <span class="tag">Publicações</span>
+            </div>
+          </div>
+          <div class="member">
+            <div class="top">
+              <div class="avatar">D</div>
+              <div>
+                <div class="name">isaac052328</div>
+                <div class="role">Ajudante & Suporte</div>
+              </div>
+            </div>
+            <div class="tags">
+              <span class="tag">Android</span>
+              <span class="tag">Deploy</span>
+              <span class="tag">Suporte</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA fixa sempre visível para baixar o WeChat -->
+  <div class="cta-fixed" id="cta">
+    <a href="#download">⬇️ Baixar WeChat MOD agora</a>
+  </div>
+
+  <script>
+    // ----- Splash + entrada -----
+    const splash = document.getElementById('splash');
+    const skip = document.getElementById('skip');
+    const app = document.getElementById('app-root');
+    const cta = document.getElementById('cta');
+
+    function enterApp(){
+      if(!splash.classList.contains('hidden')){
+        splash.classList.add('hidden');
+        app.removeAttribute('aria-hidden');
+        const dl = document.getElementById('download');
+        if(dl) setTimeout(()=> dl.scrollIntoView({behavior:'smooth'}), 200);
+      }
+    }
+
+    // entra automático após ~1.1s e também ao clicar no botão
+    window.addEventListener('load', ()=>{
+      setTimeout(enterApp, 1100);
+      // failsafe: se algo bloquear, entra de qualquer jeito após 3.5s
+      setTimeout(enterApp, 3500);
+    });
+    if (skip) skip.addEventListener('click', enterApp);
+
+    // ----- CTA fixa some quando a área de download aparece -----
+    if ('IntersectionObserver' in window) {
+      const obs = new IntersectionObserver(([e]) => {
+        cta.style.display = e.isIntersecting ? 'none' : 'flex';
+      }, { threshold: 0.4 });
+      obs.observe(document.getElementById('download'));
+    }
+    // ----- Modal pessoas autorizadas -----
+    const team = document.getElementById('team');
+    const openTeam = document.getElementById('open-team');
+    const closeTeam = document.getElementById('close-team');
+    const xTeam = document.getElementById('x-team');
+    function showTeam(){ team.setAttribute('aria-hidden','false'); }
+    function hideTeam(){ team.setAttribute('aria-hidden','true'); }
+    if (openTeam) openTeam.addEventListener('click', showTeam);
+    if (closeTeam) closeTeam.addEventListener('click', hideTeam);
+    if (xTeam) xTeam.addEventListener('click', hideTeam);
+  </script>
 </body>
 </html>
